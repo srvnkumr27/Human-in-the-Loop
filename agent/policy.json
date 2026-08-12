@@ -1,0 +1,30 @@
+{
+  "sensitivityRules": [
+    {
+      "id": "financial_high",
+      "match": { "actionType": "charge", "amount_gte": 1000 },
+      "requiredApprovals": 2,
+      "escalation": { "notify": ["finance_lead"], "timeoutMinutes": 60 }
+    },
+    {
+      "id": "send_email_external",
+      "match": { "actionType": "send_email", "recipient_domain_not_in": ["example.com"] },
+      "requiredApprovals": 1,
+      "escalation": { "notify": ["security_team"], "timeoutMinutes": 30 }
+    },
+    {
+      "id": "delete_production",
+      "match": { "actionType": "delete", "environment": "production" },
+      "requiredApprovals": 1,
+      "escalation": { "notify": ["oncall"], "timeoutMinutes": 15 }
+    }
+  ],
+  "autoAllow": [
+    { "actionType": "send_email", "recipient_domain_in": ["example.com"] },
+    { "actionType": "charge", "amount_lt": 10 }
+  ],
+  "defaults": {
+    "approvalTTLMinutes": 120,
+    "auditLogRetentionDays": 365
+  }
+}
